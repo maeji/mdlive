@@ -1,5 +1,10 @@
 # mdlive
 
+[![CI](https://github.com/maeji/mdlive/actions/workflows/ci.yml/badge.svg)](https://github.com/maeji/mdlive/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+![Platform](https://img.shields.io/badge/platform-macOS%2013%2B-blue)
+![Swift](https://img.shields.io/badge/Swift-6-orange?logo=swift)
+
 > AI 에이전트가 만든 마크다운·HTML을 **macOS 창에서 실시간으로** 미리보는 경량 도구
 > — Claude Code, Codex, 그리고 마크다운을 파일로 쓰는 모든 도구와 함께.
 

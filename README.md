@@ -5,186 +5,192 @@
 ![Platform](https://img.shields.io/badge/platform-macOS%2013%2B-blue)
 ![Swift](https://img.shields.io/badge/Swift-6-orange?logo=swift)
 
-> AI 에이전트가 만든 마크다운·HTML을 **macOS 창에서 실시간으로** 미리보는 경량 도구
-> — Claude Code, Codex, 그리고 마크다운을 파일로 쓰는 모든 도구와 함께.
+**English** | [한국어](README.ko.md)
+
+> A lightweight macOS tool that previews the Markdown/HTML your AI agent writes **live, in real time**
+> — for Claude Code, Codex, and anything else that writes Markdown to a file.
 
 <p align="center">
-  <img src="assets/screenshot-rendering.png" alt="mdlive 렌더링 화면 — Mermaid 다이어그램과 코드 하이라이팅" width="720">
+  <img src="assets/screenshot-rendering.png" alt="mdlive rendering — Mermaid diagrams and syntax highlighting" width="720">
 </p>
 
-터미널에서 AI와 문서를 만들다 보면, 결과를 눈으로 확인하려고 매번 파일을 다른
-앱으로 열게 됩니다. mdlive 는 그 과정을 한 줄로 줄이고, 한발 더 나아가
-**에이전트가 글을 써 내려가는 동안 그 내용이 창에서 실시간으로 채워지는 것**을
-보여줍니다. Artifacts 같은 경험을, 로컬 터미널 워크플로 안에서.
+When you build docs with an AI agent in the terminal, you end up opening the file in
+another app every time you want to *see* the result. mdlive collapses that into one
+step — and goes further: it shows the content **filling in live, as the agent writes
+it**. Artifacts-like experience, inside your local terminal workflow.
 
-Swift(AppKit + WebKit)가 창과 파일 감시를 맡고, 실제 렌더링은 WKWebView 안의
-검증된 JS 라이브러리(marked.js · highlight.js · github-markdown-css)가 처리합니다.
+Swift (AppKit + WebKit) handles the window and file watching; the actual rendering is
+done by battle-tested JS libraries inside a WKWebView (marked.js · highlight.js ·
+github-markdown-css).
 
-## brief-first 워크플로 — 파일 하나로 에이전트에게 한 번에 발주
+## brief-first workflow — one file, hand the whole thing to your agent at once
 
-새 프로젝트를 시작하거나 기존 프로젝트에 기능을 추가할 때, 복잡한 세팅 없이
-**`brief.md` 파일 하나**에 만들 것을 정리합니다. mdlive 창에서 실시간으로 보며
-에이전트와 핑퐁으로 다듬은 뒤, `goal` 한 번으로 발주합니다.
+Starting a new project or adding a feature to an existing one? Skip the heavy setup and
+put everything into **a single `brief.md`**. Keep it open in mdlive, refine it back and
+forth with your agent in real time, then ship it with one `goal`.
 
 ```
-brief.md 작성  ─▶  mdlive --watch 로 보며 핑퐁으로 다듬기  ─▶  goal 로 한 번에 발주
+write brief.md  ─▶  refine it live with `mdlive --watch`  ─▶  ship it with `goal`
 ```
 
-- **`templates/brief.md`** — 5섹션 경량 템플릿(Goal / Context / Requirements /
-  Out of scope / Acceptance criteria). spec-kit·Kiro 같은 다단계 의식 없이 한 화면.
-- **`goal` skill** — 완성된 brief 를 Claude Code / Codex 가 끝까지 읽고 한 번에 구현.
-  Requirements 를 전부 만족시키고 Out of scope 는 건드리지 않습니다.
+- **`templates/brief.md`** — a 5-section lightweight template (Goal / Context /
+  Requirements / Out of scope / Acceptance criteria). One screen, no multi-step ceremony
+  like spec-kit or Kiro.
+- **`goal` skill** — Claude Code / Codex reads the finished brief end to end and
+  implements it in one pass: satisfies every requirement, never touches Out of scope.
 
 <p align="center">
-  <img src="assets/screenshot-brief.png" alt="mdlive 로 본 brief.md — Goal·Requirements·Out of scope·Acceptance criteria 5섹션" width="720">
+  <img src="assets/screenshot-brief.png" alt="brief.md in mdlive — Goal, Requirements, Out of scope, Acceptance criteria sections" width="720">
 </p>
 
-> 무거운 spec 프레임워크와 raw 바이브코딩 **사이의 가벼운 중간지대**를 노립니다.
-> 창 안에서 섹션을 골라 에이전트로 되보내는 인터랙티브 다듬기와 "발주 준비됨"
-> 완성도 게이트는 로드맵에 있습니다(아래 참고).
+> It aims for the **lightweight middle ground** between heavy spec frameworks and raw
+> vibe-coding. In-window section-select-and-send-to-agent refinement and a "ready to
+> ship" completeness gate are on the roadmap (see below).
 
-## 특징
+## Features
 
-- 🔴 **실시간 스트리밍 렌더링** — 파일이 바뀌면 전체 리로드 없이 본문만 교체.
-  깜빡임 없이 글이 채워지고, 하단에 있으면 자동으로 따라 내려갑니다(스트리밍 커서 포함)
-- 📝 **brief-first 워크플로** — `brief.md` 하나를 실시간으로 다듬고 `goal` 로 한 번에 발주 (위 참고)
-- 📄 **Markdown → GitHub 스타일 렌더링** (GFM, 표, 인용 등)
-- 🎨 **코드 신택스 하이라이팅** (highlight.js)
-- 📊 **Mermaid 다이어그램** — ` ```mermaid ` 코드 블록을 다이어그램으로 렌더
-- 🧮 **KaTeX 수식** — `$...$` / `$$...$$` 수식 렌더 (폰트까지 임베딩, 오프라인)
-- 🇰🇷 **렌더링 스타일 선택** — `--style github|korean|sepia`. `korean` 은 한글 글꼴·행간·`word-break: keep-all` 로 한글 가독성 최적화
-- 📤 **내보내기 / 인쇄** — PDF · 자체완결 HTML · 인쇄 (⌘E / ⌘⇧E / ⌘P)
-- 🔍 **줌 · 테마 토글** — ⌘+/⌘-/⌘0, ⌘T(자동/라이트/다크)
-- 🌗 **다크모드 자동 대응** (`prefers-color-scheme`)
-- 🧩 **에이전트 자동 연동** — Claude Code 훅 / Codex notify 로 "쓰면 자동으로 뜸"
-- 🔌 **완전 오프라인** — 렌더링용 JS/CSS를 모두 번들에 동봉. 인터넷 불필요
-- 🪶 **외부 패키지 의존 0** — 순수 Swift 표준 프레임워크만 사용
+- 🔴 **Live streaming render** — on file change, only the body is swapped (no full
+  reload). Text fills in without flicker; if you're near the bottom it auto-follows
+  (with a streaming cursor).
+- 📝 **brief-first workflow** — refine one `brief.md` live and ship it with `goal` (above)
+- 📄 **Markdown → GitHub-style rendering** (GFM: tables, blockquotes, …)
+- 🎨 **Code syntax highlighting** (highlight.js)
+- 📊 **Mermaid diagrams** — renders ` ```mermaid ` code blocks as diagrams
+- 🧮 **KaTeX math** — `$...$` / `$$...$$` (fonts embedded, fully offline)
+- 🌐 **Rendering styles** — `--style github|korean|sepia`. `korean` tunes font, line
+  height, and `word-break: keep-all` for Korean readability
+- 📤 **Export / print** — PDF · self-contained HTML · print (⌘E / ⌘⇧E / ⌘P)
+- 🔍 **Zoom · theme toggle** — ⌘+/⌘-/⌘0, ⌘T (auto / light / dark)
+- 🌗 **Automatic dark mode** (`prefers-color-scheme`)
+- 🧩 **Automatic agent integration** — Claude Code hook / Codex notify: "write it and it pops up"
+- 🔌 **Fully offline** — all rendering JS/CSS bundled in the app. No internet needed
+- 🪶 **Zero external dependencies** — pure Swift standard frameworks only
 
-## 요구 사항
+## Requirements
 
 - macOS 13+
 - Swift 6 / Xcode 26+
-- (인터넷 연결 불필요 — 모든 렌더링 자산이 앱에 포함됨)
+- (No internet connection required — all rendering assets ship inside the app)
 
-## 설치 & 사용
+## Install & use
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/maeji/mdlive.git
 cd mdlive
 swift build -c release
 
-# 미리보기
+# preview
 .build/release/mdlive Examples/sample.md
 
-# 라이브(실시간 갱신)
+# live (real-time updates)
 .build/release/mdlive Examples/sample.md --watch
 ```
 
-전역 설치:
+Install globally:
 
 ```bash
 cp .build/release/mdlive /usr/local/bin/
 mdlive report.md --watch
 ```
 
-### 옵션
+### Options
 
-| 옵션 | 설명 |
-|------|------|
-| `<file>` | 미리볼 `.md` / `.markdown` / `.html` / `.htm` 파일 |
-| `-w`, `--watch` | 파일 변경 시 실시간 갱신 |
-| `-s`, `--style <name>` | 렌더링 스타일: `github`(기본) · `korean` · `sepia` |
-| `-h`, `--help` | 도움말 |
+| Option | Description |
+|--------|-------------|
+| `<file>` | `.md` / `.markdown` / `.html` / `.htm` file to preview |
+| `-w`, `--watch` | re-render live on file change |
+| `-s`, `--style <name>` | rendering style: `github` (default) · `korean` · `sepia` |
+| `-h`, `--help` | help |
 
-#### 스타일
+#### Styles
 
-| 스타일 | 설명 |
-|--------|------|
-| `github` | GitHub 기본 (영문 기준) |
-| `korean` | 한글 최적화 — Apple SD Gothic Neo 글꼴, 넉넉한 행간, `word-break: keep-all` 로 어절 단위 줄바꿈 |
-| `sepia` | 따뜻한 종이색 읽기 테마 (한글 글꼴 적용, 라이트/다크 모두 대응) |
+| Style | Description |
+|-------|-------------|
+| `github` | GitHub default (English-oriented) |
+| `korean` | Korean-optimized — Apple SD Gothic Neo, generous line height, `word-break: keep-all` for word-level wrapping |
+| `sepia` | warm paper reading theme (Korean fonts applied; works in both light/dark) |
 
 ```bash
-mdlive 문서.md --style korean --watch    # 한글 문서 추천
+mdlive doc.md --style korean --watch    # recommended for Korean documents
 ```
 
-### 단축키
+### Shortcuts
 
-| 단축키 | 동작 |
-|--------|------|
-| `⌘E` / `⌘⇧E` | PDF / HTML 로 내보내기 |
-| `⌘P` | 인쇄 |
-| `⌘+` / `⌘-` / `⌘0` | 줌 인 / 아웃 / 원래 크기 |
-| `⌘T` | 테마 전환 (자동 → 라이트 → 다크) |
+| Shortcut | Action |
+|----------|--------|
+| `⌘E` / `⌘⇧E` | export as PDF / HTML |
+| `⌘P` | print |
+| `⌘+` / `⌘-` / `⌘0` | zoom in / out / reset |
+| `⌘T` | toggle theme (auto → light → dark) |
 
-## AI 에이전트와 함께 쓰기
+## Using it with AI agents
 
-mdlive 는 에이전트와 무관하게 동작합니다 — **누가 파일을 쓰든** `--watch` 가
-변경을 감지합니다. 매번 명령어를 칠 필요 없이 자동으로 띄우려면 `integrations/`:
+mdlive is agent-agnostic — **no matter who writes the file**, `--watch` picks up the
+change. To pop it up automatically without typing a command each time, see `integrations/`:
 
-| 에이전트 | 연동 방식 | 가이드 |
-|----------|-----------|--------|
-| **Claude Code** | PostToolUse 훅 (Write/Edit 시 자동) | [integrations/claude-code](integrations/claude-code/) |
-| **Codex CLI** | notify 훅 / `--watch` | [integrations/codex](integrations/codex/) |
-| 그 외 | `mdlive <file> --watch` | — |
+| Agent | Integration | Guide |
+|-------|-------------|-------|
+| **Claude Code** | PostToolUse hook (auto on Write/Edit) | [integrations/claude-code](integrations/claude-code/) |
+| **Codex CLI** | notify hook / `--watch` | [integrations/codex](integrations/codex/) |
+| Anything else | `mdlive <file> --watch` | — |
 
-Claude Code Skill 로도 쓸 수 있습니다. `skill/` 의 두 스킬을 스킬 디렉토리에 두면,
-"이거 미리보기로 보여줘"에 mdlive 를, "이 brief 대로 만들어줘"에 goal 을 호출합니다.
+It also works as Claude Code Skills. Drop the two skills in `skill/` into your skills
+directory: mdlive answers "show me a preview", and goal answers "build this brief".
 
 ```
-~/.claude/skills/mdlive/SKILL.md   # 실시간 미리보기
-~/.claude/skills/goal/SKILL.md     # brief.md 를 끝까지 읽고 한 번에 구현
+~/.claude/skills/mdlive/SKILL.md   # live preview
+~/.claude/skills/goal/SKILL.md     # read brief.md end to end and implement it in one pass
 ```
 
-## 구조
+## Layout
 
 ```
 mdlive/
 ├── Package.swift
 ├── Sources/mdlive/
-│   ├── main.swift                # CLI 인자 파싱 / 진입점
-│   ├── PreviewAppDelegate.swift  # 창 + 메뉴 + 내보내기/줌/테마 + 파일 감시
-│   ├── FileWatcher.swift         # mtime 폴링 기반 변경 감지
-│   ├── HTMLTemplate.swift        # 렌더링 셸 + window.__render 주입 지점
-│   ├── Style.swift               # 렌더링 스타일(github/korean/sepia)
-│   ├── Assets.swift              # 번들 동봉 JS/CSS 로더 (오프라인)
-│   └── Resources/                # marked · highlight.js · mermaid · KaTeX(폰트 임베딩) · github-markdown-css
-├── templates/brief.md            # brief-first 워크플로용 단일 파일 템플릿
+│   ├── main.swift                # CLI arg parsing / entry point
+│   ├── PreviewAppDelegate.swift  # window + menus + export/zoom/theme + file watching
+│   ├── FileWatcher.swift         # mtime-polling change detection
+│   ├── HTMLTemplate.swift        # render shell + window.__render injection point
+│   ├── Style.swift               # rendering styles (github/korean/sepia)
+│   ├── Assets.swift              # bundled JS/CSS loader (offline)
+│   └── Resources/                # marked · highlight.js · mermaid · KaTeX (embedded fonts) · github-markdown-css
+├── templates/brief.md            # single-file template for the brief-first workflow
 ├── skill/
-│   ├── mdlive/SKILL.md           # 실시간 미리보기 skill
-│   └── goal/SKILL.md             # brief 한 방 발주 skill
+│   ├── mdlive/SKILL.md           # live preview skill
+│   └── goal/SKILL.md             # one-shot brief execution skill
 ├── integrations/
-│   ├── mdlive-open.sh            # 공통 런처(중복 창 방지)
-│   ├── claude-code/              # Claude Code 훅
-│   └── codex/                    # Codex 훅
+│   ├── mdlive-open.sh            # shared launcher (avoids duplicate windows)
+│   ├── claude-code/              # Claude Code hook
+│   └── codex/                    # Codex hook
 └── Examples/                     # sample.md, brief.md, features.md, math.md, korean.md
 ```
 
-## 동작 원리
+## How it works
 
-1. **셸 + 주입 구조** — 마크다운 본문을 HTML 에 인라인하지 않습니다. 빈 셸을
-   먼저 로드하고, Swift 가 파일이 바뀔 때마다 `window.__render(src)` 를
-   호출(evaluateJavaScript)해 **본문 DOM 만 교체**합니다. 그래서 스트리밍 중에도
-   페이지가 리로드되지 않고, 스크롤 위치가 유지됩니다.
-2. **스크롤 스틱** — 갱신 시 사용자가 거의 바닥에 있으면 자동으로 바닥에 붙여
-   둡니다(채팅처럼 새 내용을 따라감). 위로 올려둔 상태면 위치를 보존합니다.
-3. **견고한 watch** — 파일 수정 시각을 0.4초 간격으로 폴링합니다. 에디터의
-   원자적 저장(rename)에도 강하도록 vnode 이벤트 대신 mtime 폴링을 씁니다.
-4. **안전한 주입** — 본문 문자열은 `JSONEncoder` 로 JS 리터럴로 인코딩해
-   따옴표·역슬래시·개행 이스케이프 문제를 원천 차단합니다.
+1. **Shell + injection** — the Markdown body is never inlined into the HTML. An empty
+   shell loads first, and on each file change Swift calls `window.__render(src)` (via
+   `evaluateJavaScript`) to **swap only the body DOM**. So even mid-stream the page never
+   reloads and the scroll position is kept.
+2. **Scroll-stick** — on update, if you're near the bottom it sticks you to the bottom
+   (follows new content like a chat). If you've scrolled up, your position is preserved.
+3. **Robust watch** — polls the file's mtime every 0.4s. It uses mtime polling instead of
+   vnode events so it survives editors' atomic saves (rename).
+4. **Safe injection** — the body string is encoded as a JS literal with `JSONEncoder`,
+   eliminating quote / backslash / newline escaping issues at the source.
 
-## 로드맵
+## Roadmap
 
-- [x] JS/CSS 오프라인 번들링 (CDN 의존 제거)
-- [x] Mermaid 다이어그램 렌더링
-- [x] KaTeX 수식 렌더링 (폰트 base64 임베딩으로 오프라인)
-- [x] PDF / HTML 내보내기 · 인쇄 · 줌 · 테마 토글
-- [x] brief-first 워크플로 (단일 `brief.md` 템플릿 + `goal` skill)
-- [ ] brief 완성도 게이트 — "발주 준비됨" 점검(누락 섹션·검증 불가능한 기준 표시)
-- [ ] 미리보기에서 섹션 선택 → 에이전트로 되보내기 (핑퐁 자동화)
-- [ ] brief 완성도 LLM 분석 (모호성·누락·충돌 비평)
-- [ ] 메뉴바 상주 모드 / 멀티 탭
+- [x] Offline JS/CSS bundling (no CDN dependency)
+- [x] Mermaid diagram rendering
+- [x] KaTeX math rendering (base64-embedded fonts, offline)
+- [x] PDF / HTML export · print · zoom · theme toggle
+- [x] brief-first workflow (single `brief.md` template + `goal` skill)
+- [ ] brief completeness gate — "ready to ship" check (flag missing sections / untestable criteria)
+- [ ] select a section in the preview → send back to the agent (ping-pong automation)
+- [ ] LLM-powered brief analysis (ambiguity / gaps / conflicts critique)
+- [ ] menu-bar resident mode / multi-tab
 
-## 라이선스
+## License
 
-MIT. 동봉된 서드파티 렌더링 자산의 라이선스는 [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md) 참고.
+MIT. For the licenses of the bundled third-party rendering assets, see [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md).

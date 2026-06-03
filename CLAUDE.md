@@ -14,6 +14,11 @@ AI 에이전트(Claude Code, Codex 등)가 만든 마크다운·HTML을 **macOS 
 - 핵심 차별점: 단순 뷰어가 아니라 **에이전트가 글을 써 내려가는 동안 실시간 스트리밍 렌더링**
   ("Artifacts 같은 경험을 로컬 터미널 워크플로 안에서")
 - 에이전트 무관(agent-agnostic): 누가 파일을 쓰든 `--watch` 가 감지
+- **제품 방향 — brief-first 워크플로**: 복잡한 세팅 없이 단일 `brief.md` 파일 하나에
+  집중. mdlive 창에서 핑퐁으로 다듬고 `goal` skill 로 Claude Code/Codex 에게 한 번에 발주.
+  spec-kit(다단계 CLI)·Kiro(무거운 IDE)와 **경쟁이 아니라**, 그 사이의 "파일 하나, 가볍게"
+  중간지대를 노린다. brief 템플릿 5섹션 = Goal / Context / Requirements / Out of scope /
+  Acceptance criteria.
 
 ## 기술 스택 / 아키텍처
 
@@ -52,12 +57,15 @@ mdlive/
 │       ├── mermaid.min.js             # 다이어그램 (MIT, 3.2MB)
 │       ├── katex.min.js + auto-render.min.js
 │       └── katex.min.css              # ★ woff2 폰트 20개를 base64 임베딩한 자체완결 CSS (MIT)
-├── skill/SKILL.md                # Claude Code Skill 정의
+├── templates/brief.md            # brief-first 워크플로용 단일 파일 템플릿 (5섹션)
+├── skill/
+│   ├── mdlive/SKILL.md           # 실시간 미리보기 skill
+│   └── goal/SKILL.md             # brief.md 끝까지 읽고 한 번에 구현하는 발주 skill
 ├── integrations/
 │   ├── mdlive-open.sh            # 공통 런처(중복 창 방지, pgrep 체크)
 │   ├── claude-code/              # PostToolUse 훅 (Write/Edit→자동 실행) + README
 │   └── codex/                    # notify 훅(최근 수정 문서 추정) + README
-└── Examples/                     # sample.md, features.md(mermaid), math.md(katex), korean.md
+└── Examples/                     # sample.md, brief.md(작성 예시), features.md(mermaid), math.md(katex), korean.md
 ```
 
 ## 구현 완료된 기능
@@ -115,10 +123,13 @@ kill $P
 
 ## 다음 할 일 (로드맵)
 
+- [x] brief-first 워크플로 1차 — 단일 `brief.md` 템플릿 + `goal` skill
+- [ ] **brief 완성도 게이트** — 누락 섹션·검증 불가능한 기준 휴리스틱 점검 → "발주 준비됨" 표시 (API 불필요, JS 로컬)
+- [ ] **미리보기에서 섹션 선택 → 에이전트로 되보내기** (핑퐁 자동화; v1 은 클립보드 정형 프롬프트, 이후 파일드롭/skill)
+- [ ] **brief 완성도 LLM 분석** — 모호성·누락·충돌 비평 (Codex/Claude API; 신청 시 API 크레딧 사용처)
 - [ ] GitHub Actions CI(swift build/test)
 - [ ] README 에 스크린샷/GIF 추가 (star 유입에 중요)
 - [ ] 메뉴바 상주 모드 / 멀티 탭
-- [ ] 미리보기에서 문단 선택 → 에이전트로 피드백 되보내기
 - [ ] (선택) 기본 스타일에 한글 자동 감지, 스타일 ⌘ 단축키 전환
 
 ## 기여 메모

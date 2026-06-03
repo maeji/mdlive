@@ -11,10 +11,30 @@
 Swift(AppKit + WebKit)가 창과 파일 감시를 맡고, 실제 렌더링은 WKWebView 안의
 검증된 JS 라이브러리(marked.js · highlight.js · github-markdown-css)가 처리합니다.
 
+## brief-first 워크플로 — 파일 하나로 에이전트에게 한 번에 발주
+
+새 프로젝트를 시작하거나 기존 프로젝트에 기능을 추가할 때, 복잡한 세팅 없이
+**`brief.md` 파일 하나**에 만들 것을 정리합니다. mdlive 창에서 실시간으로 보며
+에이전트와 핑퐁으로 다듬은 뒤, `goal` 한 번으로 발주합니다.
+
+```
+brief.md 작성  ─▶  mdlive --watch 로 보며 핑퐁으로 다듬기  ─▶  goal 로 한 번에 발주
+```
+
+- **`templates/brief.md`** — 5섹션 경량 템플릿(Goal / Context / Requirements /
+  Out of scope / Acceptance criteria). spec-kit·Kiro 같은 다단계 의식 없이 한 화면.
+- **`goal` skill** — 완성된 brief 를 Claude Code / Codex 가 끝까지 읽고 한 번에 구현.
+  Requirements 를 전부 만족시키고 Out of scope 는 건드리지 않습니다.
+
+> 무거운 spec 프레임워크와 raw 바이브코딩 **사이의 가벼운 중간지대**를 노립니다.
+> 창 안에서 섹션을 골라 에이전트로 되보내는 인터랙티브 다듬기와 "발주 준비됨"
+> 완성도 게이트는 로드맵에 있습니다(아래 참고).
+
 ## 특징
 
 - 🔴 **실시간 스트리밍 렌더링** — 파일이 바뀌면 전체 리로드 없이 본문만 교체.
   깜빡임 없이 글이 채워지고, 하단에 있으면 자동으로 따라 내려갑니다(스트리밍 커서 포함)
+- 📝 **brief-first 워크플로** — `brief.md` 하나를 실시간으로 다듬고 `goal` 로 한 번에 발주 (위 참고)
 - 📄 **Markdown → GitHub 스타일 렌더링** (GFM, 표, 인용 등)
 - 🎨 **코드 신택스 하이라이팅** (highlight.js)
 - 📊 **Mermaid 다이어그램** — ` ```mermaid ` 코드 블록을 다이어그램으로 렌더
@@ -95,11 +115,12 @@ mdlive 는 에이전트와 무관하게 동작합니다 — **누가 파일을 �
 | **Codex CLI** | notify 훅 / `--watch` | [integrations/codex](integrations/codex/) |
 | 그 외 | `mdlive <file> --watch` | — |
 
-Claude Code Skill 로도 쓸 수 있습니다. `skill/SKILL.md` 를 스킬 디렉토리에 두면
-"이거 미리보기로 보여줘" 같은 요청에 에이전트가 자동으로 mdlive 를 호출합니다.
+Claude Code Skill 로도 쓸 수 있습니다. `skill/` 의 두 스킬을 스킬 디렉토리에 두면,
+"이거 미리보기로 보여줘"에 mdlive 를, "이 brief 대로 만들어줘"에 goal 을 호출합니다.
 
 ```
-~/.claude/skills/mdlive/SKILL.md
+~/.claude/skills/mdlive/SKILL.md   # 실시간 미리보기
+~/.claude/skills/goal/SKILL.md     # brief.md 를 끝까지 읽고 한 번에 구현
 ```
 
 ## 구조
@@ -115,12 +136,15 @@ mdlive/
 │   ├── Style.swift               # 렌더링 스타일(github/korean/sepia)
 │   ├── Assets.swift              # 번들 동봉 JS/CSS 로더 (오프라인)
 │   └── Resources/                # marked · highlight.js · mermaid · KaTeX(폰트 임베딩) · github-markdown-css
-├── skill/SKILL.md                # Claude Code Skill 정의
+├── templates/brief.md            # brief-first 워크플로용 단일 파일 템플릿
+├── skill/
+│   ├── mdlive/SKILL.md           # 실시간 미리보기 skill
+│   └── goal/SKILL.md             # brief 한 방 발주 skill
 ├── integrations/
 │   ├── mdlive-open.sh            # 공통 런처(중복 창 방지)
 │   ├── claude-code/              # Claude Code 훅
 │   └── codex/                    # Codex 훅
-└── Examples/sample.md
+└── Examples/                     # sample.md, brief.md, features.md, math.md, korean.md
 ```
 
 ## 동작 원리
@@ -142,8 +166,11 @@ mdlive/
 - [x] Mermaid 다이어그램 렌더링
 - [x] KaTeX 수식 렌더링 (폰트 base64 임베딩으로 오프라인)
 - [x] PDF / HTML 내보내기 · 인쇄 · 줌 · 테마 토글
+- [x] brief-first 워크플로 (단일 `brief.md` 템플릿 + `goal` skill)
+- [ ] brief 완성도 게이트 — "발주 준비됨" 점검(누락 섹션·검증 불가능한 기준 표시)
+- [ ] 미리보기에서 섹션 선택 → 에이전트로 되보내기 (핑퐁 자동화)
+- [ ] brief 완성도 LLM 분석 (모호성·누락·충돌 비평)
 - [ ] 메뉴바 상주 모드 / 멀티 탭
-- [ ] 미리보기에서 문단 선택 → 에이전트로 피드백 되보내기
 
 ## 라이선스
 

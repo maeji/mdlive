@@ -3,6 +3,10 @@
 > AI 에이전트가 만든 마크다운·HTML을 **macOS 창에서 실시간으로** 미리보는 경량 도구
 > — Claude Code, Codex, 그리고 마크다운을 파일로 쓰는 모든 도구와 함께.
 
+<p align="center">
+  <img src="assets/screenshot-rendering.png" alt="mdlive 렌더링 화면 — Mermaid 다이어그램과 코드 하이라이팅" width="720">
+</p>
+
 터미널에서 AI와 문서를 만들다 보면, 결과를 눈으로 확인하려고 매번 파일을 다른
 앱으로 열게 됩니다. mdlive 는 그 과정을 한 줄로 줄이고, 한발 더 나아가
 **에이전트가 글을 써 내려가는 동안 그 내용이 창에서 실시간으로 채워지는 것**을
@@ -25,6 +29,10 @@ brief.md 작성  ─▶  mdlive --watch 로 보며 핑퐁으로 다듬기  ─�
   Out of scope / Acceptance criteria). spec-kit·Kiro 같은 다단계 의식 없이 한 화면.
 - **`goal` skill** — 완성된 brief 를 Claude Code / Codex 가 끝까지 읽고 한 번에 구현.
   Requirements 를 전부 만족시키고 Out of scope 는 건드리지 않습니다.
+
+<p align="center">
+  <img src="assets/screenshot-brief.png" alt="mdlive 로 본 brief.md — Goal·Requirements·Out of scope·Acceptance criteria 5섹션" width="720">
+</p>
 
 > 무거운 spec 프레임워크와 raw 바이브코딩 **사이의 가벼운 중간지대**를 노립니다.
 > 창 안에서 섹션을 골라 에이전트로 되보내는 인터랙티브 다듬기와 "발주 준비됨"

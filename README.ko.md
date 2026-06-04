@@ -96,6 +96,7 @@ mdlive report.md --watch
 | `<file>` | 미리볼 `.md` / `.markdown` / `.html` / `.htm` 파일 |
 | `-w`, `--watch` | 파일 변경 시 실시간 갱신 |
 | `-s`, `--style <name>` | 렌더링 스타일: `github`(기본) · `korean` · `sepia` |
+| `-V`, `--version` | 버전 출력 |
 | `-h`, `--help` | 도움말 |
 
 #### 스타일

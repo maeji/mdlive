@@ -100,6 +100,7 @@ mdlive report.md --watch
 | `<file>` | `.md` / `.markdown` / `.html` / `.htm` file to preview |
 | `-w`, `--watch` | re-render live on file change |
 | `-s`, `--style <name>` | rendering style: `github` (default) · `korean` · `sepia` |
+| `-V`, `--version` | print version |
 | `-h`, `--help` | help |
 
 #### Styles

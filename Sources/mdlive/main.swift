@@ -1,5 +1,7 @@
 import AppKit
 
+let mdliveVersion = "0.1.0"
+
 // MARK: - CLI 인자 파싱
 
 struct Options {
@@ -26,6 +28,7 @@ func printUsage() {
                               github  GitHub 기본(영문 기준)
                               korean  한글 최적화(글꼴·행간·줄바꿈 조정)
                               sepia   따뜻한 종이색 읽기 테마(한글 글꼴)
+        -V, --version       버전 출력
         -h, --help          이 도움말 출력
     """)
 }
@@ -42,6 +45,9 @@ func parseOptions() -> Options? {
         switch arg {
         case "-h", "--help":
             printUsage()
+            exit(0)
+        case "-V", "--version":
+            print("mdlive \(mdliveVersion)")
             exit(0)
         case "-w", "--watch":
             watch = true
